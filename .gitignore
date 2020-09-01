@@ -1,4 +1,4 @@
-/node_modules
+/Client/node_modules/
 
 # Build and Release Folders
 bin-debug/
