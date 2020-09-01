@@ -6,6 +6,17 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Code20Project/KMC-Client.git"
@@ -23,6 +34,8 @@
     "eslint-plugin-import": "2.22.0",
     "eslint-plugin-jsx-a11y": "6.3.1",
     "eslint-plugin-react": "7.20.6",
-    "eslint-plugin-react-hooks": "4.1.0"
+    "eslint-plugin-react-hooks": "4.1.0",
+    "husky": "4.2.5",
+    "lint-staged": "10.2.13"
   }
 }
