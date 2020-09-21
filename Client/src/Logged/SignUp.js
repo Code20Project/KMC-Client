@@ -14,39 +14,12 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   // 비밀번호
   const [password, setPassword] = useState('');
-  const [passwordSuccess, setPasswordSuccess] = useState(false);
+  // const [passwordSuccess, setPasswordSuccess] = useState(false);
   // 비밀번호 확인
   const [passwordCheck, setPasswordCheck] = useState('');
   const [passwordCheckSuccess, setPasswordCheckSuccess] = useState(false);
   // 닉네임
   const [nickName, setNickName] = useState('');
-
-  // 중복확인
-  // fetch를 활용해서 생성한 이메일을 서버로 보내 이메일의 사용가능 여부를 판별한다
-  const url = `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/user/signup`;
-  const checkEmail = (e) => {
-    console.log('중복확인', checkEmail);
-    fetch(url, {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email: email }),
-    }).then((res) => {
-      // 백엔드에 보낸 결과가 200일 경우
-      if (res.status === 200) {
-        alert('사용가능한 이메일 입니다.');
-        // 사용 가능한 이메일이면 email의 state상태 true로 변경
-        setEmail({ email: true });
-      } else if (res.status === 409) {
-        // 백엔드에 결과가 409일 경우
-        alert('이미 사용중인 이메일 입니다.');
-      } else {
-        // 그 외에는 사용불가 알림
-        alert('사용 불가능한 아이디입니다.');
-      }
-    });
-  };
 
   // email
   const emailCondition = (e) => {
@@ -61,6 +34,8 @@ const SignUp = () => {
   // passwordCheck
   const passwordCheckCondition = (e) => {
     console.log(passwordCheck);
+    // 비밀번호를 입력할 때 마다 비밀번호를 검증하는 함수
+    setPasswordCheckSuccess(e.target.value === password);
     setPasswordCheck(e.target.value);
   };
   //nickName
@@ -71,15 +46,16 @@ const SignUp = () => {
 
   // var emailRule = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
   // 이메일 형식 정규식
-  const onSubmit = (event) => {
-    event.preventDefault();
+  const onSubmit = (e) => {
+    e.preventDefault();
     console.log(email, password, passwordCheck, nickName);
 
     // 이메일
     if (email.length === 0) {
       return alert('이메일을 입력하세요');
     }
-    // 비밀번호
+    // 비밀번호, 비밀번호 조건을 만든다.
+    // 실시간 유효성 검사 할 수 있도록
     if (password.length === 0) {
       return alert('비밀번호를 입력하세요');
     } else if (password.length < 8) {
@@ -90,14 +66,12 @@ const SignUp = () => {
       return alert(
         '입력하신 비밀번호는 20자리 이상입니다. 비밀번호는 8~20 자리 사이로 구성되어야 합니다.',
       );
-    } else {
-      setPasswordSuccess(true); // 사용가능 문자를 실시간으로 어떻게 대입할까?
     }
     // 비밀번호 확인
     if (passwordCheck.length === 0) {
       return alert('비밀번호 확인을 입력하세요');
     }
-    if (!(password === passwordCheck)) {
+    if (password !== passwordCheck) {
       return alert('입력하신 비밀번호가 다릅니다. 다시 확인하세요');
     } else {
       setPasswordCheckSuccess(true); // 사용가능 문자를 실시간으로 어떻게 대입할까?
@@ -125,7 +99,6 @@ const SignUp = () => {
                 onChange={emailCondition}
               />
             </label>
-            <input type="button" value="중복확인" onClick={checkEmail} />
           </tr>
 
           <tr>
@@ -138,11 +111,6 @@ const SignUp = () => {
                 value={password}
                 onChange={passwordCondition}
               />
-              {passwordSuccess && (
-                <div style={{ color: 'blue' }}>
-                  사용 가능한 비밀번호 입니다.
-                </div>
-              )}
             </label>
           </tr>
 
@@ -216,16 +184,14 @@ export default SignUp;
 - 키보드와 마우스에서 손을 뗄 것
 */
 
+// 중복확인
+// fetch를 활용해서 생성한 이메일을 서버로 보내 이메일의 사용가능 여부를 판별한다
 /*
-// url 주소를 변수에 담아준다.
-  // const url = `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/user/signup`;
-  // 중복확인, fetch를 활용해서 생성한 이메일을 서버로 보내 이메일의 사용가능 여부를 판별한다
-  //!------------------------------------------!//
-  const checkId = (event) => {
-    console.log(checkId);
-    // fetch로 url에 POST 메소드로 이메일 정보를 확인
+  const url = `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/user/signup`;
+  const checkEmail = (e) => {
+    console.log('중복확인', checkEmail);
     fetch(url, {
-      method: 'POST',
+      method: 'post',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -245,44 +211,4 @@ export default SignUp;
       }
     });
   };
-
-  // 로그인 페이지로 돌아가기
-  // 정말로 돌아가시겠습니까? 경고문구(돌아가기/취소) 후에 돌아 갈 수 있도록
-  const backToLoginPage = (event) => {
-    console.log(backToLoginPage);
-  };
-  //!------------------------------------------!//
-  // 가입하기 onSubmit
-  // [pass ? success : false], 삼항연사자 or switch 사용하기
-  const onSubmit = (event) => {
-    event.preventDefault();
-    console.log(email, password, passwordCheck, nickname);
-
-    // 이메일이 입력이 되지 않았다면 에러메세지를 띄운다
-    if (email.length == 0) {
-      // console.log("test");
-      return alert('이메일을 입력하세요');
-    }
-
-    // 비밀번호 입력칸이 비어있으면 안된다
-    if (password.length === 0) {
-      return alert('비밀번호를 입력하세요');
-    }
-
-    // 비밀번호 확인 칸이 비어있으면 안된다
-    if (passwordCheck.length === 0) {
-      return alert('비밀번호 확인을 입력하세요');
-    }
-    if (!(password === passwordCheck)) {
-      //! 비밀번호가 일치하지 않습니다
-      return alert('비밀번호가 일치하지 않습니다.');
-    }
-    // 닉네임이 작성되어야 된다
-    if (nickname.length === 0) {
-      return alert('닉네임을 입력하세요');
-    }
-    // 모든 조건을 충족하면 회원가입 완료
-    return alert('회원가입이 완료되었습니다.');
-    //* 중복확인 완료, 유효성검사 완료, >> 로그인 화면으로 돌아가기
-  };
-*/
+  */
