@@ -1,13 +1,18 @@
 // router, cookie, async && await
 import React, { useState, useReducer } from 'react';
-import '../App.css';
-// import cookie
+import {
+  BrowserRouter,
+  Switch,
+  Router,
+  Route,
+  Link,
+  useLocation,
+} from 'react-router-dom';
 import cookie from 'react-cookie';
-// import redux
-// - connect 함수를 통해 redux와 연결 할 수 있다.
 import { connect } from 'react-redux';
-// - 서정한 props들을 import 한다.
-//? import {...} from "..."
+import '../App.css';
+import SignUp from './SignUp';
+import ReactDOM from 'react-dom';
 
 //! 1. User가 정보를 입력하고 서버에 보낸다.(request)
 //* 2. 서버에서 DB에 있는 사용자의 정보를 확인한다.
@@ -34,70 +39,69 @@ function LogInPage({ router, token }) {
   // 로그인 입력창,패스워드 입력창, 로그인 버튼, 처음 오셨나요 >> 회원가입 페이지로 이동
   // 로그인 시, 로그아웃 버튼
   const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState(false);
   const [password, setPassword] = useState('');
-  const [passwordError, setPasswordError] = useState(false);
 
-  // 로그인 라우터 생성
-  // 요청된 이메일이 데이터베이스에 있다면, 비밀번호가 맞는지 확인한다.
-  // 비밀번호까지 맞자면 토큰을 생성하기
+  const emailCondition = (e) => {
+    console.log(email);
+    setEmail(e.target.value);
+  };
 
-  const onSubmit = (event) => {
-    // 1. event를 인자로 받아와서
-    // 2. 입력한 정보가 리셋이 되는 것을 막아준다. >> event.preventDefault();
-    event.preventDefault();
-    // email을 입력하지 않았다면 에러메세지
-    if (email.length == 0) {
-      console.log(setEmailError);
-      return setEmailError(true);
-      // 비밀번호가 8자 이하거나 입력되지 않았다면 에러메세지
-    } else if (password.length <= 0 || password.length < 8) {
-      console.log(setPasswordError);
-      return setPasswordError(true);
-      // 그 외에 제대로 입력 됬다면 성공
-    } else {
-      alert('로그인에 성공하셧습니다.');
-      console.log(email, password);
+  const passwordCondition = (e) => {
+    console.log(password);
+    setPassword(e.target.value);
+  };
+
+  const checkMassage = () => {
+    if (email.length === 0) {
+      return alert('이메일을 입력하세요');
     }
+    if (password.length === 0) {
+      return alert('비밀번호를 입력하세요');
+    }
+  };
+
+  const url = `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/user/signup`;
+  const onSubmit = (e) => {
+    e.preventDefault();
+    console.log(email, password);
+    // 서버로 유저의 정보를 보낸다.
+    // 있는 회원이라면,
   };
 
   return (
     <center>
       <form onSubmit={onSubmit}>
-        <h1>로그인</h1>
+        <h1>KMC</h1>
         <table bgcolor="#424242" cellspacing="5">
           <tr>
-            <td>E-Mail</td>
+            <td>이메일</td>
             <td>
               <input
                 type="email"
-                placeholder="Your E-Mail"
+                placeholder="이메일을 작성하세요"
                 value={email}
-                onChange={(event) => setEmail(event.target.value)}
+                onChange={emailCondition}
               />
-              {emailError && (
-                <div style={{ color: 'red' }}>이메일을 입력하세요</div>
-              )}
             </td>
           </tr>
 
           <tr>
-            <td>Password</td>
+            <td>비밀번호</td>
             <td>
               <input
                 type="password"
-                placeholder="Your Password"
+                placeholder="비밀번호를 입력하세요"
                 value={password}
-                onChange={(event) => setPassword(event.target.value)}
+                onChange={passwordCondition}
               />
-              {passwordError && (
-                <div style={{ color: 'red' }}>비밀번호를 확인하세요.</div>
-              )}
             </td>
           </tr>
         </table>
-        <button type="submit">로그인</button>
+        <input type="submit" value="로그인" onClick={checkMassage} />
       </form>
+      <button>
+        <Link to="/signup">처음 오셨나요?</Link>
+      </button>
     </center>
   );
 }
