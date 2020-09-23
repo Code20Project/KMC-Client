@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { Route, Link, Router, Switch } from 'react-router-dom';
+// import App from '../App';
+const axios = require('axios'); // axios (http 통신을 위한 라이브러리)
 
 // 1. e-mail
 // 2. password
@@ -10,78 +13,111 @@ import React, { useState } from 'react';
 // console.log(process.env.REACT_APP_SERVER_HOST);
 // console.log(process.env.REACT_APP_SERVER_PORT);
 const SignUp = () => {
-  // 이메일
+  // 이메일, 비밀번호, 비밀먼호 확인, 닉네임
   const [email, setEmail] = useState('');
-  // 비밀번호
   const [password, setPassword] = useState('');
-  // const [passwordSuccess, setPasswordSuccess] = useState(false);
-  // 비밀번호 확인
-  const [passwordCheck, setPasswordCheck] = useState('');
-  const [passwordCheckSuccess, setPasswordCheckSuccess] = useState(false);
-  // 닉네임
-  const [nickName, setNickName] = useState('');
+  const [passwordVerify, setPasswordVerify] = useState('');
+  const [nickname, setNickname] = useState('');
 
   // email
   const emailCondition = (e) => {
     console.log(email);
     setEmail(e.target.value);
   };
+
   // password
   const passwordCondition = (e) => {
     console.log(password);
     setPassword(e.target.value);
   };
-  // passwordCheck
-  const passwordCheckCondition = (e) => {
-    console.log(passwordCheck);
-    // 비밀번호를 입력할 때 마다 비밀번호를 검증하는 함수
-    setPasswordCheckSuccess(e.target.value === password);
-    setPasswordCheck(e.target.value);
+
+  // passwordVerify
+  const passwordVerifyCondition = (e) => {
+    console.log(passwordVerify);
+    setPasswordVerify(e.target.value);
   };
+
   //nickName
-  const nickNameCondition = (e) => {
-    console.log(nickName);
-    setNickName(e.target.value);
+  const nicknameCondition = (e) => {
+    console.log(nickname);
+    setNickname(e.target.value);
   };
 
-  // var emailRule = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/;
-  // 이메일 형식 정규식
-  const onSubmit = (e) => {
-    e.preventDefault();
-    console.log(email, password, passwordCheck, nickName);
+  // 비밀번호 확인
+  const passwordCheck = () => {
+    if (password.length > 0 && passwordVerify.length > 0) {
+      if (password === passwordVerify) {
+        return (
+          <div style={{ color: 'blue' }}>입력하신 비밀번호가 동일합니다.</div>
+        );
+      } else if (password !== passwordVerify) {
+        return (
+          <div style={{ color: 'red' }}>비밀번호가 일치하지 않습니다.</div>
+        );
+      }
+    } else if (password.length < 0 || passwordVerify.length > 0) {
+      return <div style={{ color: 'red' }}>위의 비밀번호를 입력해주세요</div>;
+    }
+  };
 
-    // 이메일
+  // 빈 칸 확인 메세지
+  const checkMassage = () => {
+    // 비활성화 기능 때문에 클릭이 안되니 에러메세지를 띄울 수가 없다.
+    // 빈칸이 있을 시 에러메세지를 띄워준다
     if (email.length === 0) {
       return alert('이메일을 입력하세요');
     }
-    // 비밀번호, 비밀번호 조건을 만든다.
-    // 실시간 유효성 검사 할 수 있도록
     if (password.length === 0) {
       return alert('비밀번호를 입력하세요');
-    } else if (password.length < 8) {
-      return alert(
-        '입력하신 비밀번호는 8자리 이하입니다. 비밀번호는 8~20 자리 사이로 구성되어야 합니다.',
-      );
-    } else if (password.length > 20) {
-      return alert(
-        '입력하신 비밀번호는 20자리 이상입니다. 비밀번호는 8~20 자리 사이로 구성되어야 합니다.',
-      );
     }
-    // 비밀번호 확인
-    if (passwordCheck.length === 0) {
+    if (passwordVerify.length === 0) {
       return alert('비밀번호 확인을 입력하세요');
     }
-    if (password !== passwordCheck) {
-      return alert('입력하신 비밀번호가 다릅니다. 다시 확인하세요');
-    } else {
-      setPasswordCheckSuccess(true); // 사용가능 문자를 실시간으로 어떻게 대입할까?
-    }
-    if (nickName.length === 0) {
-      alert('닉네임을 입력하세요');
-    } else {
-      alert('회원이 되신 것을 환영합니다.');
+    if (nickname.length === 0) {
+      return alert('닉네임을 입력하세요');
     }
   };
+
+  // 로그인 페이지로 돌아가기
+  const backToLogin = (e) => {
+    console.log('test');
+    e.preventDefault();
+  };
+
+  const url = `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/user/signup`;
+  const onSubmit = (e) => {
+    e.preventDefault();
+    console.log(email, password, passwordVerify, nickname);
+    // 입력한 정보를 서버에 보낸준다
+    axios({
+      method: 'post',
+      url: url,
+      data: {
+        email: email,
+        password: password,
+        nickname: nickname,
+      },
+    }).then((res) => {
+      console.log('응답', res);
+      // 서버에 보낸 결과가 200일 경우 회원가입 완료 메세지
+      if (res.status === 201) {
+        alert('회원가입이 완료되었습니다');
+        // 로그인 페이지로 이동하기
+      }
+      if (res.status === 409) {
+        alert('이미 가입된 회원입니다');
+      }
+    });
+  };
+
+  // 버튼 비활성화 조건
+  const enabled =
+    email.length > 0 &&
+    password.length > 0 &&
+    passwordVerify.length > 0 &&
+    nickname.length > 0;
+
+  //! 로그인 페이지 구현 후 로그인 화면으로 돌아가기 클릭 시 로그인 페이지로 이동 기능 구현 해야함
   // 렌더링
   return (
     <center>
@@ -121,14 +157,10 @@ const SignUp = () => {
                 type="password"
                 name="passwordCheck"
                 placeholder="비밀번호를 다시 입력하세요"
-                value={passwordCheck}
-                onChange={passwordCheckCondition}
+                value={passwordVerify}
+                onChange={passwordVerifyCondition}
               />
-              {passwordCheckSuccess && (
-                <div style={{ color: 'blue' }}>
-                  입력하신 비밀번호가 동일합니다.
-                </div>
-              )}
+              {passwordCheck()}
             </label>
           </tr>
 
@@ -139,14 +171,23 @@ const SignUp = () => {
                 type="text"
                 name="nickName"
                 placeholder="닉네임을 입력하세요"
-                value={nickName}
-                onChange={nickNameCondition}
+                value={nickname}
+                onChange={nicknameCondition}
               />
             </label>
           </tr>
           <center>
-            <input type="submit" value="로그인 화면으로 돌아가기" />
-            <input type="submit" value="가입하기" />
+            <input
+              type="reset"
+              value="로그인 화면으로 돌아가기"
+              onClick={backToLogin}
+            />
+            <input
+              type="submit"
+              value="가입하기"
+              onClick={checkMassage} // 비활성화 클릭 X
+              disabled={!enabled}
+            />
           </center>
         </table>
       </form>
@@ -156,33 +197,10 @@ const SignUp = () => {
 
 export default SignUp;
 
-/*
-1. 윤혁님의 단계를 잘 모름
-2. 6개월 8개월 정도 코드를 공부
-4. 코드를 몰라서 -> 회원가입 폼을 윤혁님은 어느 정도 머릿 속에서 구현을 하셨어요. 에디터 상에도 나왔어요. -> 이거는 구글링 하는ㄱ ㅔ아니에요
-5. 윤혁님이 어떤 로직이든 간에 회원가입이 윤혁님의 아읻이어대로 구현이 되면, 그게 회원가입 폼이에요
-6. 인피니티 스크롤,  감이 안 잡히는거요 -> 기능 남의 코드를 봐야 되요 -> 인풋
-7. 프로젝트를 할 떄, 엄청 많은 기능이 들어가요. 로그인/회우너가입은 기본중의 기본. 인피니티 스크롤. 레이지 로드. 페이지네이션. 게시판 -> 남의 코드를 최대한 많ㅇ ㅣ봐야 되요  ->
-8. 남의 코드를 안 보면은 이게 어떻게 생겨먹엇는지 몰라요
-9. 우릭 ㅏ코드가 어려운 이유는 자꾸 무에서 유를 창조하려고 하기 때문에 어려운거에요 -> 무를 유로 바꿔야 되요 -> 유에서 유
-10. ㄱ시판을 만든다? 구글을 하는거에요
-
-- 이론
-1. 비동기함수,
-2. 리액트에서 함수를 표현하는 방법 - 훅
-*/
-
-/*
-1. 훅스를 안 써요 훅스로 바꾸는 작업도 좋아
-2. 리덕스 / 사가
-
-3. 공식문서 코드를 그대로 쳐보기
-4. 리액트 훅 폼 쓰지 말 것. 지금처럼 처음부터 윤혁님이 하나하나 만들 것
-*/
-
-/*
-- 키보드와 마우스에서 손을 뗄 것
-*/
+//? html, css를 이용해 정적으로 홈페이지를 만들 수 있다
+//? 그러나 동적으로 만들기 위해 react 안에서 jsx문법으로 동적으로 만든다
+//? 컴포넌트를 하나의 기능대로 각각 분리한다
+//? 유효성 검사 또한 실시간으로 렌더링한다.
 
 // 중복확인
 // fetch를 활용해서 생성한 이메일을 서버로 보내 이메일의 사용가능 여부를 판별한다
