@@ -1,14 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import './index.css';
-// import App from './App';
-// import LogInPage from './Logged/LogInPage';
-import SignUp from './Logged/SignUp';
+import App from './App';
+import * as serviceWorker from './serviceWorker';
 
-const root = document.getElementById('root');
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root'),
+);
 
-ReactDOM.render(<SignUp />, root);
-
-// export { default as App } from './App';
-// export { default as SignUp } from './Logged/SignUp';
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://bit.ly/CRA-PWA
+serviceWorker.unregister();
