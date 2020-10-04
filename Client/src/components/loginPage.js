@@ -1,37 +1,14 @@
 // router, cookie, async && await
 import React, { useState, useReducer } from 'react';
-import {
-  BrowserRouter,
-  Switch,
-  Router,
-  Route,
-  Link,
-  useLocation,
-} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import cookie from 'react-cookie';
 import { connect } from 'react-redux';
-import '../App.css';
-import SignUp from './SignUp';
 import ReactDOM from 'react-dom';
-
-//! 1. User가 정보를 입력하고 서버에 보낸다.(request)
-//* 2. 서버에서 DB에 있는 사용자의 정보를 확인한다.
-//* 3. 서버에서 회원 정보 세션을 생성해 세션저장소에 보낸다.
-//* 4. 세션 저장소에서 세션ID를 발급 받아 서버에 가져온다.
-// // ! 5. 서버가 세션ID를 사용자에게 준다.(응답)
-// 세션ID를 받아오면 프론트 측에서 "쿠키(cookie)"에 저장을 해야한다.
-// cookie(access token & refresh token), redux store를 사용한다.
-//! 6. 데이터(+쿠키)를 서버에 요청한다. (token)
-//* 7. 서버에서 DB에 쿠키를 검증한다.
-//* 8. 세션 저장소에서 유저정보(세션)을 획득한다.
-//! 9. 서버에서 유저에게 응답(+요청데이터)해준다.
-
-// - 로그아웃 경우 refresh token를 서버에 삭제 요청을 한다.
-// - 서버에서 refresh token이 제대로 삭제 되었다는 status200 응답을 받으면,
-//   cookie에 있는 access token & refresh token을 삭제해준다.
+import axios from 'axios';
+import { loginFalse, loginTrue } from '../actions';
 
 // 라우터로 전달받은 prameter 설정
-function LogInPage({ router, token }) {
+const LogInPage = ({ router, token, history }) => {
   // 값을 세팅하는 함수
   // 서버에 보내줄 정보
   // Button의 상태를 결정할 함수 >> token이 있다면, 유저의 정보를 가져온다.
@@ -60,12 +37,40 @@ function LogInPage({ router, token }) {
     }
   };
 
-  const url = `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/user/signup`;
+  const newUser = () => {
+    history.push('/SignUp');
+  };
+
+  const url = `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/user/profile`;
   const onSubmit = (e) => {
     e.preventDefault();
     console.log(email, password);
-    // 서버로 유저의 정보를 보낸다.
-    // 있는 회원이라면,
+    axios({
+      method: 'get',
+      url: url,
+      data: {
+        email: email,
+        password: password,
+      },
+    }).then((res) => {
+      console.log('응답', res);
+      // 서버에 보낸 결과가 201인 경우 token을 받아온다
+      if (res.status === 201) {
+        alert('로그인에 성공했습니다.');
+        return loginTrue;
+      }
+      // 서버에 보낸 결과가 409일 경우 가입되지 않은 회원입니다
+      if (res.status === 409) {
+        alert('가입되지 않은 회원입니다.');
+        return loginFalse;
+      }
+    });
+    // 리덕스 세팅 먼저 (state store 만들어 놓기)
+    /* 비동기 처리 잘해야 된다 */
+    // 서버로 유저의 정보를 보낸다
+    // >> 실패(404) >> alert("실패") >> 로그인 화면(초기화 화면)
+    // 로그인에 성공하면(200) >> refresh token과 access token을 받아와 쿠키에 넣어준다
+    // history.goBack("메인 홈페이지 화면")
   };
 
   return (
@@ -99,11 +104,12 @@ function LogInPage({ router, token }) {
         </table>
         <input type="submit" value="로그인" onClick={checkMassage} />
       </form>
-      <button>
-        <Link to="/signup">처음 오셨나요?</Link>
-      </button>
+      {newUser && <button onClick={newUser}>처음 오셨나요?</button>}
     </center>
   );
-}
+};
 
 export default LogInPage;
+
+// redux 선물 - 시간여행 디버깅
+// window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()

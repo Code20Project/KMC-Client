@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Route, Link, Router, Switch } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 // import App from '../App';
 const axios = require('axios'); // axios (http 통신을 위한 라이브러리)
 
@@ -61,7 +61,8 @@ const SignUp = ({ history }) => {
   };
 
   // 빈 칸 확인 메세지 >> 로그인 페이지로 돌아가는 기능
-  const checkMassage = () => {
+  const backToLogin = () => {
+    history.push('/Login');
     // 비활성화 기능 때문에 클릭이 안되니 에러메세지를 띄울 수가 없다.
     // 빈칸이 있을 시 에러메세지를 띄워준다
     // if (email.length === 0) {
@@ -173,13 +174,13 @@ const SignUp = ({ history }) => {
             </label>
           </tr>
           <center>
-            <button>
-              <Link to="/Login">로그인 페이지로 돌아가기</Link>
-            </button>
+            {backToLogin && (
+              <button onClick={backToLogin}>로그인 화면으로 돌아가기</button>
+            )}
             <input
               type="submit"
               value="가입하기"
-              onClick={checkMassage} // 비활성화 클릭 X
+              // onClick={checkMassage} // 비활성화 클릭 X
               disabled={!enabled}
             />
           </center>
