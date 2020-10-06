@@ -1,9 +1,9 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import LogInPage from './components/loginPage';
-import SignUp from './components/signUp';
+import LogInPage from './components/LoginPage';
+import SignUp from './components/SignUp';
 // import logo from './logo.svg';
-import LoginTest from './components/loginTest';
+// import LoginTest from './components/loginTest';
 // import LoginTestContainer from './containers/LoginTestContainer'
 import './App.css';
 
@@ -11,7 +11,7 @@ const App = () => {
   return (
     <div className="App">
       {/* 경로를 맞게 홈페이지를 등록해주는 작업 */}
-      <Route exact path={['/', '/login']} component={LogInPage} />
+      <Route exact path={['/', '/Login']} component={LogInPage} />
       <Route path="/signup" component={SignUp} />
     </div>
 

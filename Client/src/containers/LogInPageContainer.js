@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { loginTrue, loginFalse } from '../actions';
-import LogInPage from '../components/loginPage';
+import LogInPage from '../components/LoginPage';
 
 const mapStateToProps = (state) => ({
   // LoginPage에서 로그인 초기 상태값의 속성을 받고 싶어합니다.
