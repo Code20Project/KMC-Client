@@ -1,12 +1,37 @@
 import React from 'react';
-import logo from './logo.svg';
-// import signUp from './Logged/SignUp';
+import { Route } from 'react-router-dom';
+import LogInPage from './components/LoginPage';
+import SignUp from './components/SignUp';
+// import logo from './logo.svg';
+// import LoginTest from './components/loginTest';
+// import LoginTestContainer from './containers/LoginTestContainer'
 import './App.css';
 
 const App = () => {
   return (
     <div className="App">
-      <header className="App-header">
+      {/* 경로를 맞게 홈페이지를 등록해주는 작업 */}
+      <Route exact path={['/', '/Login']} component={LogInPage} />
+      <Route path="/signup" component={SignUp} />
+    </div>
+
+    // <LoginTestContainer />
+  );
+};
+
+export default App;
+
+// Switch 전환
+// Route 경로
+/*
+<Route
+        path="/"
+        component={} 현영님이 만드신 홈페이지가 들어가야 합니다
+        exact={true}/>
+*/
+// exact는  '/'의 경로 겹침으로 인한 화면 여러 컴포넌트가 나오는 현상을 해결하기 위한 옵션
+
+/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
@@ -19,9 +44,4 @@ const App = () => {
         >
           Learn React
         </a>
-      </header>
-    </div>
-  );
-};
-
-export default App;
+      </header> */
