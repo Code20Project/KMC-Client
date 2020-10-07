@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 // import App from '../App';
 const axios = require('axios'); // axios (http 통신을 위한 라이브러리)
 
@@ -21,25 +20,25 @@ const SignUp = ({ history }) => {
 
   // email
   const emailCondition = (e) => {
-    console.log(email);
+    // console.log(email);
     setEmail(e.target.value);
   };
 
   // password
   const passwordCondition = (e) => {
-    console.log(password);
+    // console.log(password);
     setPassword(e.target.value);
   };
 
   // passwordVerify
   const passwordVerifyCondition = (e) => {
-    console.log(passwordVerify);
+    // console.log(passwordVerify);
     setPasswordVerify(e.target.value);
   };
 
-  //nickName
+  // nickName
   const nicknameCondition = (e) => {
-    console.log(nickname);
+    // console.log(nickname);
     setNickname(e.target.value);
   };
 
@@ -67,7 +66,7 @@ const SignUp = ({ history }) => {
     // 빈칸이 있을 시 에러메세지를 띄워준다
   };
   const backToMainHome = () => {
-    history.push();
+    history.push('/');
   };
 
   const url = `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/user/signup`;
@@ -110,7 +109,7 @@ const SignUp = ({ history }) => {
     <center>
       <form onSubmit={onSubmit}>
         <h1>회원가입</h1>
-        <table bgcolor="#424242" cellspacing="5">
+        <table bgcolor="#424242" cellSpacing="5">
           <tr>
             <label>
               이메일
