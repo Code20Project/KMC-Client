@@ -58,7 +58,7 @@ function Home() {
           </div>
           <div className="Register">
             <span className="login" role="presentation">
-              로그인
+              <Link to="/login"> 로그인 </Link>
             </span>
             <span className="signup" role="presentation">
               <Link to="/signup"> 회원가입 </Link>

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Route, Link, Router, Switch } from 'react-router-dom';
 // import App from '../App';
 const axios = require('axios'); // axios (http 통신을 위한 라이브러리)
 
@@ -12,7 +11,7 @@ const axios = require('axios'); // axios (http 통신을 위한 라이브러리)
 // .env란? 환경변수를 설정해주는 모듈이다.4
 // console.log(process.env.REACT_APP_SERVER_HOST);
 // console.log(process.env.REACT_APP_SERVER_PORT);
-const SignUp = () => {
+const SignUp = ({ history }) => {
   // 이메일, 비밀번호, 비밀먼호 확인, 닉네임
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,25 +20,25 @@ const SignUp = () => {
 
   // email
   const emailCondition = (e) => {
-    console.log(email);
+    // console.log(email);
     setEmail(e.target.value);
   };
 
   // password
   const passwordCondition = (e) => {
-    console.log(password);
+    // console.log(password);
     setPassword(e.target.value);
   };
 
   // passwordVerify
   const passwordVerifyCondition = (e) => {
-    console.log(passwordVerify);
+    // console.log(passwordVerify);
     setPasswordVerify(e.target.value);
   };
 
-  //nickName
+  // nickName
   const nicknameCondition = (e) => {
-    console.log(nickname);
+    // console.log(nickname);
     setNickname(e.target.value);
   };
 
@@ -60,28 +59,14 @@ const SignUp = () => {
     }
   };
 
-  // 빈 칸 확인 메세지
-  const checkMassage = () => {
+  // 빈 칸 확인 메세지 >> 로그인 페이지로 돌아가는 기능
+  const backToLogin = () => {
+    history.push('/Login');
     // 비활성화 기능 때문에 클릭이 안되니 에러메세지를 띄울 수가 없다.
     // 빈칸이 있을 시 에러메세지를 띄워준다
-    if (email.length === 0) {
-      return alert('이메일을 입력하세요');
-    }
-    if (password.length === 0) {
-      return alert('비밀번호를 입력하세요');
-    }
-    if (passwordVerify.length === 0) {
-      return alert('비밀번호 확인을 입력하세요');
-    }
-    if (nickname.length === 0) {
-      return alert('닉네임을 입력하세요');
-    }
   };
-
-  // 로그인 페이지로 돌아가기
-  const backToLogin = (e) => {
-    console.log('test');
-    e.preventDefault();
+  const backToMainHome = () => {
+    history.push('/');
   };
 
   const url = `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/user/signup`;
@@ -102,6 +87,7 @@ const SignUp = () => {
       // 서버에 보낸 결과가 200일 경우 회원가입 완료 메세지
       if (res.status === 201) {
         alert('회원가입이 완료되었습니다');
+        history.push('/Login');
         // 로그인 페이지로 이동하기
       }
       if (res.status === 409) {
@@ -123,7 +109,7 @@ const SignUp = () => {
     <center>
       <form onSubmit={onSubmit}>
         <h1>회원가입</h1>
-        <table bgcolor="#424242" cellspacing="5">
+        <table bgcolor="#424242" cellSpacing="5">
           <tr>
             <label>
               이메일
@@ -177,17 +163,16 @@ const SignUp = () => {
             </label>
           </tr>
           <center>
-            <input
-              type="reset"
-              value="로그인 화면으로 돌아가기"
-              onClick={backToLogin}
-            />
+            <button onClick={backToLogin}>로그인 화면으로 돌아가기</button>
             <input
               type="submit"
               value="가입하기"
-              onClick={checkMassage} // 비활성화 클릭 X
+              // onClick={checkMassage} // 비활성화 클릭 X
               disabled={!enabled}
             />
+          </center>
+          <center>
+            <button onClick={backToMainHome}>메인 홈페이지</button>
           </center>
         </table>
       </form>
@@ -230,3 +215,17 @@ export default SignUp;
     });
   };
   */
+
+// if (email.length === 0) {
+//   return alert('이메일을 입력하세요');
+// }
+// if (password.length === 0) {
+//   return alert('비밀번호를 입력하세요');
+// }
+// if (passwordVerify.length === 0) {
+//   return alert('비밀번호 확인을 입력하세요');
+// }
+// if (nickname.length === 0) {
+//   return alert('닉네임을 입력하세요');
+// }
+// 다시 로그인 화면으로 갈 수 있도록 하는 >> history.push('/Login');
