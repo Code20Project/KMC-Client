@@ -1,14 +1,13 @@
 // router, cookie, async && await
-import React, { useState, useReducer } from 'react';
-import { Link } from 'react-router-dom';
-import cookie from 'react-cookie';
-import { connect } from 'react-redux';
-import ReactDOM from 'react-dom';
+import React, { useState } from 'react';
+// import cookie from 'react-cookie';
+// import { connect } from 'react-redux';
+// import ReactDOM from 'react-dom';
 import axios from 'axios';
 import { loginFalse, loginTrue } from '../actions';
 
 // 라우터로 전달받은 prameter 설정
-const LogInPage = ({ router, token, history }) => {
+const LogInPage = ({ history }) => {
   // 값을 세팅하는 함수
   // 서버에 보내줄 정보
   // Button의 상태를 결정할 함수 >> token이 있다면, 유저의 정보를 가져온다.
@@ -19,12 +18,12 @@ const LogInPage = ({ router, token, history }) => {
   const [password, setPassword] = useState('');
 
   const emailCondition = (e) => {
-    console.log(email);
+    // console.log(email);
     setEmail(e.target.value);
   };
 
   const passwordCondition = (e) => {
-    console.log(password);
+    // console.log(password);
     setPassword(e.target.value);
   };
 
@@ -44,7 +43,7 @@ const LogInPage = ({ router, token, history }) => {
   const url = `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/user/profile`;
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log(email, password);
+    // console.log(email, password);
     axios({
       method: 'get',
       url: url,
@@ -53,7 +52,7 @@ const LogInPage = ({ router, token, history }) => {
         password: password,
       },
     }).then((res) => {
-      console.log('응답', res);
+      // console.log('응답', res);
       // 서버에 보낸 결과가 201인 경우 token을 받아온다
       if (res.status === 201) {
         alert('로그인에 성공했습니다.');
@@ -77,7 +76,7 @@ const LogInPage = ({ router, token, history }) => {
     <center>
       <form onSubmit={onSubmit}>
         <h1>KMC</h1>
-        <table bgcolor="#424242" cellspacing="5">
+        <table bgcolor="#424242" cellSpacing="5">
           <tr>
             <td>이메일</td>
             <td>
