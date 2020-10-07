@@ -1,4 +1,4 @@
-/client/node_modules/
+/Client/node_modules/
 .DS_Store
 # Build and Release Folders
 bin-debug/
