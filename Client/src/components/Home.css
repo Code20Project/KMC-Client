@@ -90,7 +90,7 @@ li {
   right: 0;
   /* z-index: 1; */
 }
-.listBoard-content span {
+.listBoard-content div {
   float: left;
   color: black;
   padding: 12px 16px;
@@ -98,14 +98,14 @@ li {
   display: block;
   text-align: left;
 }
-.listBoard-content span:hover {
+.listBoard-content div:hover {
   font-weight: bolder;
 }
 .dropdown:hover .listBoard-content {
   display: block;
 }
 
-#mainHomeList {
-  padding-top: 20px;
-  margin: 0;
+.mainHomeList div {
+  float: left;
+  margin: 30px;
 }

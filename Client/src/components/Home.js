@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
+import searchIcon from '../img/search_magnifier.png';
 
 function Home() {
   const [boardType, setBoardType] = useState([]);
@@ -44,7 +45,7 @@ function Home() {
   // 한번만 실행하고 싶을경우 빈 배열을 두번째 인자로 넘겨줄것.
   // 참고 사이트 https://ko.reactjs.org/docs/hooks-effect.html
   useEffect(() => {
-    console.log('useEffect test 합니다.');
+    // console.log('useEffect test 합니다.');
     getFetchData('/board');
   }, []);
 
@@ -56,11 +57,7 @@ function Home() {
           <div className="searching">
             <input className="search_text" type="text" />
             <button className="search_btn" type="submit" onClick={searchClick}>
-              <img
-                className="search_img"
-                src="https://cdn.icon-icons.com/icons2/2406/PNG/512/search_magnifier_icon_145939.png"
-                alt=""
-              />
+              <img className="search_img" src={searchIcon} alt="searchIcon" />
             </button>
           </div>
           <div className="Register">
@@ -90,7 +87,7 @@ function Home() {
           </li>
         </ul>
       </header>
-      <div id="mainHomeList">{setBoardTypes}</div>
+      <div className="mainHomeList">{setBoardTypes}</div>
     </div>
   );
 }
