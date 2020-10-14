@@ -1,5 +1,6 @@
 .Home {
   text-align: center;
+  margin: 0px 10px 10px 10px;
 }
 
 .Mainhome-header {
@@ -52,30 +53,29 @@
   padding: 10px;
 }
 
-li {
-  list-style: none;
-  float: left;
-  padding: 12px 16px;
-}
-
 .menu-list {
   background-color: rgb(245, 226, 140);
   border-radius: 40px 40px;
   margin: 0px;
+  padding: 20px;
 }
-.menu-list span:hover {
+.menu-list a:hover {
   font-weight: bolder;
+}
+.menu-list li {
+  display: inline;
+  list-style: none;
+  padding: 14px 16px;
 }
 
 .dropdown {
-  float: left;
   overflow: hidden;
+  display: inline;
 }
 .dropdown .boardList {
   border: none;
   outline: none;
   color: black;
-  padding: 14px 16px;
   background-color: inherit;
   font-family: inherit;
   margin: 0;
@@ -84,16 +84,17 @@ li {
   display: none;
   position: absolute;
   background-color: #f9f9f9;
+  border-radius: 10px;
   padding: 10px;
   min-width: 160px;
-  left: 0;
-  right: 0;
-  /* z-index: 1; */
+  left: 1%;
+  right: 1%;
 }
 .listBoard-content div {
   float: left;
+  text-align: center;
   color: black;
-  padding: 12px 16px;
+  padding: 14px 16px;
   text-decoration: none;
   display: block;
   text-align: left;

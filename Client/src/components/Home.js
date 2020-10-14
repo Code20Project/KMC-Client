@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
 import searchIcon from '../img/search_magnifier.png';
+import { loginFalse, loginTrue } from '../actions';
 
 function Home() {
   const [boardType, setBoardType] = useState([]);
@@ -38,9 +39,6 @@ function Home() {
     getFetchData('/board');
   };
 
-  // 로그인 구분 (로그인시 사용한 이메일(id)로 구분.)
-  // 로그인 유무에 따라 글쓰기,댓글 기능 활성화 필요
-
   // ComponentDidMount
   // 한번만 실행하고 싶을경우 빈 배열을 두번째 인자로 넘겨줄것.
   // 참고 사이트 https://ko.reactjs.org/docs/hooks-effect.html
@@ -48,6 +46,10 @@ function Home() {
     // console.log('useEffect test 합니다.');
     getFetchData('/board');
   }, []);
+
+  // 로그인 구분 (로그인시 사용한 이메일(id)로 구분.)
+  // 로그인 성공시 -> 로그인부분에 유저닉네임과 함께 로그인 상태 표시, 회원가입부분에 로그아웃 표시
+  // 로그인 유무에 따라 글쓰기,댓글 기능 활성화
 
   return (
     <div className="Home">
@@ -71,19 +73,14 @@ function Home() {
         </div>
         <ul className="menu-list">
           <li id="menu-list-home" role="presentation" onClick={clickboardList}>
-            <span>홈</span>
+            <a>홈</a>
           </li>
           <li className="dropdown" role="presentation">
-            <span className="boardList">게시판</span>
-            <div className="listBoard-content">
-              {/* <span>자유게시판</span>
-              <span>공부팁 & 노하우</span>
-              <span>취업준비</span> */}
-              {setBoardTypes}
-            </div>
+            <a className="boardList">게시판</a>
+            <div className="listBoard-content">{setBoardTypes}</div>
           </li>
-          <li id="menu-list-assessment" role="presentation">
-            <span>강의평가</span>
+          <li role="presentation">
+            <a>강의평가</a>
           </li>
         </ul>
       </header>
