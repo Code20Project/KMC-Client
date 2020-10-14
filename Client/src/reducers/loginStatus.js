@@ -1,3 +1,4 @@
+import { connectAdvanced } from 'react-redux';
 import { LOGIN_TRUE, LOGIN_FALSE, LOGOUT } from '../actions/index';
 
 // 초기 상태 및 리듀서 함수 만들기에요
@@ -9,17 +10,17 @@ const initialState = {
 const LoginTest = (state = initialState, action) => {
   switch (action.type) {
     case LOGIN_TRUE:
-      return {
-        login: true,
-      };
+      return Object.assign({}, state, {
+        isLogin: true,
+      });
     case LOGIN_FALSE:
-      return {
-        login: false,
-      };
+      return Object.assign({}, state, {
+        isLogin: false,
+      });
     case LOGOUT:
-      return {
-        login: false,
-      };
+      return Object.assign({}, state, {
+        isLogin: false,
+      });
     default:
       return state;
   }

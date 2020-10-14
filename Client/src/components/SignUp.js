@@ -109,14 +109,14 @@ const SignUp = ({ history }) => {
     <center>
       <form onSubmit={onSubmit}>
         <h1>회원가입</h1>
-        <table bgcolor='#424242' cellSpacing='5'>
+        <table bgcolor="#A9E2F3" cellSpacing="5">
           <tr>
             <label>
               이메일
               <input
-                type='email'
-                name='email'
-                placeholder='이메일을 입력하세요'
+                type="email"
+                name="email"
+                placeholder="이메일을 입력하세요"
                 value={email}
                 onChange={emailCondition}
               />
@@ -127,9 +127,9 @@ const SignUp = ({ history }) => {
             <label>
               비밀번호
               <input
-                type='password'
-                name='password'
-                placeholder='비밀번호를 입력하세요'
+                type="password"
+                name="password"
+                placeholder="비밀번호를 입력하세요"
                 value={password}
                 onChange={passwordCondition}
               />
@@ -140,9 +140,9 @@ const SignUp = ({ history }) => {
             <label>
               비밀번호 확인
               <input
-                type='password'
-                name='passwordCheck'
-                placeholder='비밀번호를 다시 입력하세요'
+                type="password"
+                name="passwordCheck"
+                placeholder="비밀번호를 다시 입력하세요"
                 value={passwordVerify}
                 onChange={passwordVerifyCondition}
               />
@@ -154,9 +154,9 @@ const SignUp = ({ history }) => {
             <label>
               닉네임
               <input
-                type='text'
-                name='nickName'
-                placeholder='닉네임을 입력하세요'
+                type="text"
+                name="nickName"
+                placeholder="닉네임을 입력하세요"
                 value={nickname}
                 onChange={nicknameCondition}
               />
@@ -165,8 +165,8 @@ const SignUp = ({ history }) => {
           <center>
             <button onClick={backToLogin}>로그인 화면으로 돌아가기</button>
             <input
-              type='submit'
-              value='가입하기'
+              type="submit"
+              value="가입하기"
               // onClick={checkMassage} // 비활성화 클릭 X
               disabled={!enabled}
             />
