@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+// import { useCookies } from 'react-cookie';
 
 import LogInPage from './components/LoginPage';
 import SignUp from './components/SignUp';
@@ -25,4 +26,3 @@ function App() {
 }
 
 export default App;
-

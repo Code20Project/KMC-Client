@@ -1,10 +1,19 @@
-// router, cookie, async && await
 import React, { useState } from 'react';
+import axios from 'axios';
+import { withCookies, Cookies, useCookies } from 'react-cookie';
+
+import { loginFalse, loginTrue, setCookie } from '../actions';
+// import { setCookie } from 'redux-cookie';
+// router, cookie, async && await
 // import cookie from 'react-cookie';
 // import { connect } from 'react-redux';
 // import ReactDOM from 'react-dom';
-import axios from 'axios';
-import { loginFalse, loginTrue } from '../actions';
+
+// npmJS cookie - https://www.npmjs.com/package/react-cookie
+// jwt
+// 정보를 보내고 응답이오면
+// x-access-token && x-refresh token cookie에 저장
+// body에 있는 nickname을 리덕스 스토어에 저장한다(reducer)
 
 // 라우터로 전달받은 prameter 설정
 const LogInPage = ({ history }) => {
@@ -16,6 +25,13 @@ const LogInPage = ({ history }) => {
   // 로그인 시, 로그아웃 버튼
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [cookies, setCookie] = useCookies(['name']);
+
+  // 서버에 보내줄 정보
+  const inputDataObj = {
+    email,
+    password,
+  };
 
   const emailCondition = (e) => {
     // console.log(email);
@@ -39,50 +55,64 @@ const LogInPage = ({ history }) => {
   const newUser = () => {
     history.push('/SignUp');
   };
+  const backToMainHome = () => {
+    history.push('/');
+  };
 
-  const url = `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/user/profile`;
-  const onSubmit = (e) => {
+  const url = `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}/user/signin`;
+  const onSubmit = (e, newName) => {
     e.preventDefault();
-    // console.log(email, password);
+    console.log(email, password);
+
     axios({
-      method: 'get',
+      method: 'post',
       url: url,
-      data: {
-        email: email,
-        password: password,
-      },
+      data: JSON.parse(
+        JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      ),
     }).then((res) => {
       // console.log('응답', res);
-      // 서버에 보낸 결과가 201인 경우 token을 받아온다
-      if (res.status === 201) {
+      // 서버에 보낸 결과가 200인 경우 token을 받아온다
+      if (res.status === 200) {
+        console.log('status 200');
         alert('로그인에 성공했습니다.');
+        // 1. access token, refresh token을 쿠키에 저장하는 것
+        // const { x-reflesh-token, x-access-token } = res.headers;
+        setCookie('name', newName, history.push('/'));
+        console.log('res Header: ', res.headers);
+        console.log('res Data: ', res.data);
+        // 2. redux login: false -> login: true
+        // 리덕스를 사용할 때 비동기 처리가 들어가야 한다. <Promise, async, await>
         return loginTrue;
+        // 3. body 닉네임, 리덕스 스토어에 저장
       }
       // 서버에 보낸 결과가 409일 경우 가입되지 않은 회원입니다
-      if (res.status === 409) {
+      if (res.status === 501) {
+        console.log('status  501');
         alert('가입되지 않은 회원입니다.');
         return loginFalse;
       }
     });
-    // 리덕스 세팅 먼저 (state store 만들어 놓기)
-    /* 비동기 처리 잘해야 된다 */
-    // 서버로 유저의 정보를 보낸다
-    // >> 실패(404) >> alert("실패") >> 로그인 화면(초기화 화면)
-    // 로그인에 성공하면(200) >> refresh token과 access token을 받아와 쿠키에 넣어준다
-    // history.goBack("메인 홈페이지 화면")
   };
+
+  //버튼 비활성화 조건
+  // const enabled = email.length > 0 && password.length > 0;
 
   return (
     <center>
-      <form onSubmit={onSubmit}>
+      <form name={cookies.nickname} onSubmit={onSubmit}>
+        {cookies.nickname && <h3>Hello {cookies.nickname}!</h3>}
         <h1>KMC</h1>
-        <table bgcolor='#424242' cellSpacing='5'>
+        <table bgcolor="#A9E2F3" cellSpacing="5">
           <tr>
             <td>이메일</td>
             <td>
               <input
-                type='email'
-                placeholder='이메일을 작성하세요'
+                type="email"
+                placeholder="이메일을 작성하세요"
                 value={email}
                 onChange={emailCondition}
               />
@@ -93,17 +123,23 @@ const LogInPage = ({ history }) => {
             <td>비밀번호</td>
             <td>
               <input
-                type='password'
-                placeholder='비밀번호를 입력하세요'
+                type="password"
+                placeholder="비밀번호를 입력하세요"
                 value={password}
                 onChange={passwordCondition}
               />
             </td>
           </tr>
         </table>
-        <input type='submit' value='로그인' onClick={checkMassage} />
+        <input
+          type="submit"
+          value="로그인"
+          onClick={checkMassage}
+          // disabled={!enabled}
+        />
+        {newUser && <button onClick={newUser}>처음 오셨나요?</button>}
       </form>
-      {newUser && <button onClick={newUser}>처음 오셨나요?</button>}
+      <button onClick={backToMainHome}>메인 홈페이지</button>
     </center>
   );
 };

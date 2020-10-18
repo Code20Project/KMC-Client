@@ -51,6 +51,10 @@ function Home() {
   // 로그인 성공시 -> 로그인부분에 유저닉네임과 함께 로그인 상태 표시, 회원가입부분에 로그아웃 표시
   // 로그인 유무에 따라 글쓰기,댓글 기능 활성화
 
+  // 로그인 상태
+
+  // 로그아웃 상태
+
   return (
     <div className="Home">
       <header className="Mainhome-header">
