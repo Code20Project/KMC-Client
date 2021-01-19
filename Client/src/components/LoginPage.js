@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { withCookies, Cookies, useCookies } from 'react-cookie';
-
-import { loginFalse, loginTrue, setCookie } from '../actions';
-// import { setCookie } from 'redux-cookie';
-// router, cookie, async && await
-// import cookie from 'react-cookie';
-// import { connect } from 'react-redux';
-// import ReactDOM from 'react-dom';
+import { withRouter } from 'react-router-dom';
+import { loginUser } from '../actions';
+// react Cookie
+import { useCookies } from 'react-cookie';
 
 // npmJS cookie - https://www.npmjs.com/package/react-cookie
 // jwt
@@ -25,13 +21,8 @@ const LogInPage = ({ history }) => {
   // 로그인 시, 로그아웃 버튼
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  // react cookie
   const [cookies, setCookie] = useCookies(['name']);
-
-  // 서버에 보내줄 정보
-  const inputDataObj = {
-    email,
-    password,
-  };
 
   const emailCondition = (e) => {
     // console.log(email);
@@ -74,28 +65,25 @@ const LogInPage = ({ history }) => {
         }),
       ),
     }).then((res) => {
-      // console.log('응답', res);
-      // 서버에 보낸 결과가 200인 경우 token을 받아온다
+      console.log('응답', res);
       if (res.status === 200) {
         console.log('status 200');
         alert('로그인에 성공했습니다.');
-        // 1. access token, refresh token을 쿠키에 저장하는 것
-        // const { x-reflesh-token, x-access-token } = res.headers;
-        setCookie('name', newName, history.push('/'));
-        console.log('res Header: ', res.headers);
-        console.log('res Data: ', res.data);
-        // 2. redux login: false -> login: true
-        // 리덕스를 사용할 때 비동기 처리가 들어가야 한다. <Promise, async, await>
-        return loginTrue;
-        // 3. body 닉네임, 리덕스 스토어에 저장
+        setCookie('name', newName, { path: '/' });
       }
-      // 서버에 보낸 결과가 409일 경우 가입되지 않은 회원입니다
       if (res.status === 501) {
         console.log('status  501');
         alert('가입되지 않은 회원입니다.');
-        return loginFalse;
       }
     });
+    //로그인을 진행하기위해서
+    //첫번째 useDispatch(액션) 을 활용해서 액션을 dispatch해준다
+
+    // promise 개념에 대해 학습하기
+    // 리덕스를 사용할 때 비동기 처리가 들어가야 한다. <Promise, async, await>
+    // token을 함수에 저장하기, 함수를 따로 작성
+    // redux login: false -> login: true
+    // body 닉네임, 리덕스 스토어에 저장
   };
 
   //버튼 비활성화 조건
@@ -103,8 +91,7 @@ const LogInPage = ({ history }) => {
 
   return (
     <center>
-      <form name={cookies.nickname} onSubmit={onSubmit}>
-        {cookies.nickname && <h3>Hello {cookies.nickname}!</h3>}
+      <form onSubmit={onSubmit}>
         <h1>KMC</h1>
         <table bgcolor="#A9E2F3" cellSpacing="5">
           <tr>
@@ -144,7 +131,42 @@ const LogInPage = ({ history }) => {
   );
 };
 
-export default LogInPage;
+export default withRouter(LogInPage);
 
 // redux 선물 - 시간여행 디버깅
 // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+
+/*
+ axios({
+      method: 'post',
+      url: url,
+      data: JSON.parse(
+        JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      ),
+    }).then((res) => {
+      // console.log('응답', res);
+      // 서버에 보낸 결과가 200인 경우 token을 받아온다
+      if (res.status === 200) {
+        console.log('status 200');
+        alert('로그인에 성공했습니다.');
+        // 1. access token, refresh token을 쿠키에 저장하는 것
+        // const { x-reflesh-token, x-access-token } = res.headers;
+        setCookie('name', newName, history.push('/'));
+        console.log('res Header: ', res.headers);
+        console.log('res Data: ', res.data);
+        // 2. redux login: false -> login: true
+        // 리덕스를 사용할 때 비동기 처리가 들어가야 한다. <Promise, async, await>
+        return loginTrue;
+        // 3. body 닉네임, 리덕스 스토어에 저장
+      }
+      // 서버에 보낸 결과가 409일 경우 가입되지 않은 회원입니다
+      if (res.status === 501) {
+        console.log('status  501');
+        alert('가입되지 않은 회원입니다.');
+        return loginFalse;
+      }
+    });
+*/
